@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saltroad — Speech Therapy, Without the Wait</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#2E2A4D;
+    --paper:#F4F2F8;
+    --paper-2:#EAE5F2;
+    --violet:#6E5FA8;
+    --violet-deep:#4F4080;
+    --violet-tint:#EDE9F6;
+    --amber:#F0A24C;
+    --amber-deep:#D6822C;
+    --slate:#6B6480;
+    --line:#DAD3E8;
+    --white:#FFFFFF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--paper); color:var(--ink); font-family:'Inter',sans-serif; line-height:1.5; -webkit-font-smoothing:antialiased;}
+  a{color:inherit;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 32px;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  .display{font-family:'Source Serif 4',serif;}
+
+  nav{position:sticky; top:0; z-index:50; background:rgba(244,242,248,0.9); backdrop-filter:blur(10px); border-bottom:1px solid var(--line);}
+  nav .wrap{display:flex; align-items:center; justify-content:space-between; height:76px;}
+  .brand{display:flex; align-items:center; gap:10px; font-family:'Source Serif 4',serif; font-weight:600; font-size:19px;}
+  .brand .dot{width:9px; height:9px; border-radius:50%; background:var(--amber);}
+  .navlinks{display:flex; gap:34px; font-size:14px; font-weight:500; color:var(--slate);}
+  .navlinks a:hover{color:var(--violet-deep);}
+  .navcta{background:var(--ink); color:var(--paper); font-size:14px; font-weight:600; padding:11px 20px; border-radius:3px; text-decoration:none; font-family:'JetBrains Mono',monospace;}
+  .navcta:hover{background:var(--violet-deep);}
+  @media (max-width:820px){ .navlinks{display:none;} }
+
+  .hero{padding:72px 0 20px;}
+  .eyebrow{display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:12.5px; letter-spacing:0.06em; color:var(--violet-deep); text-transform:uppercase; margin-bottom:22px;}
+  .eyebrow::before{content:''; width:7px; height:7px; border-radius:50%; background:var(--amber);}
+  h1.display{font-size:clamp(36px,4.8vw,58px); font-weight:600; line-height:1.06; letter-spacing:-0.01em; margin-bottom:22px;}
+  h1.display em{font-style:italic; color:var(--violet); font-weight:500;}
+  .hero p.lead{font-size:18px; color:var(--slate); max-width:520px; margin-bottom:36px;}
+
+  /* Signature: waiting-time comparison */
+  .wait-compare{background:var(--white); border:1px solid var(--line); border-radius:8px; padding:30px 32px; margin-bottom:8px;}
+  .wait-row{margin-bottom:22px;}
+  .wait-row:last-child{margin-bottom:0;}
+  .wait-label{display:flex; justify-content:space-between; font-size:13px; margin-bottom:8px;}
+  .wait-label .name{color:var(--slate); font-weight:500;}
+  .wait-label .val{font-family:'JetBrains Mono',monospace; font-weight:600;}
+  .wait-track{height:14px; background:var(--paper-2); border-radius:7px; overflow:hidden;}
+  .wait-fill{height:100%; border-radius:7px;}
+  .wait-fill.typical{width:92%; background:linear-gradient(90deg,#C7BFDD,#B0A4CE); animation:growTypical 1.4s ease-out;}
+  .wait-fill.saltroad{width:6%; background:linear-gradient(90deg,var(--amber),var(--amber-deep)); animation:growSaltroad 1.4s ease-out;}
+  @keyframes growTypical{from{width:0;} to{width:92%;}}
+  @keyframes growSaltroad{from{width:0;} to{width:6%;}}
+  .wait-label .val.typical{color:var(--violet-deep);}
+  .wait-label .val.saltroad{color:var(--amber-deep);}
+
+  .cta-row{display:flex; gap:14px; flex-wrap:wrap; margin-top:28px;}
+  .btn{display:inline-flex; align-items:center; gap:9px; padding:15px 26px; border-radius:3px; font-weight:600; font-size:15px; text-decoration:none; border:1px solid transparent; cursor:pointer; transition:transform .15s ease, background .15s ease;}
+  .btn:hover{transform:translateY(-1px);}
+  .btn-primary{background:var(--amber); color:var(--white);}
+  .btn-primary:hover{background:var(--amber-deep);}
+  .btn-ghost{background:transparent; color:var(--ink); border-color:var(--ink);}
+  .btn-ghost:hover{background:var(--ink); color:var(--paper);}
+
+  /* trust strip */
+  .trust-strip{padding:48px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:var(--violet-tint);}
+  .trust-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:28px; text-align:center;}
+  @media (max-width:700px){ .trust-grid{grid-template-columns:1fr 1fr;} }
+  .trust-num{font-family:'Source Serif 4',serif; font-size:32px; font-weight:600; color:var(--violet-deep);}
+  .trust-label{font-size:12.5px; color:var(--slate); margin-top:6px;}
+
+  .section{padding:84px 0;}
+  .section-head{max-width:600px; margin-bottom:48px;}
+  .kicker{font-family:'JetBrains Mono',monospace; font-size:12.5px; letter-spacing:0.06em; text-transform:uppercase; color:var(--amber-deep); margin-bottom:14px;}
+  h2.display{font-size:clamp(26px,3.2vw,36px); font-weight:600; letter-spacing:-0.01em;}
+  .section-head p{color:var(--slate); font-size:16px; margin-top:14px;}
+
+  /* matching steps */
+  .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:6px; overflow:hidden;}
+  @media (max-width:800px){ .steps{grid-template-columns:1fr;} }
+  .step{background:var(--white); padding:32px 28px;}
+  .step .snum{font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--violet-deep); margin-bottom:18px;}
+  .step h3{font-family:'Source Serif 4',serif; font-size:19px; font-weight:600; margin-bottom:10px;}
+  .step p{font-size:14px; color:var(--slate);}
+
+  /* WhatsApp demo */
+  .wa-section{background:var(--ink); color:var(--paper); padding:92px 0;}
+  .wa-grid{display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;}
+  @media (max-width:900px){ .wa-grid{grid-template-columns:1fr;} }
+  .wa-copy .kicker{color:#C9BFE8;}
+  .wa-copy h2{font-size:clamp(24px,3.1vw,34px); margin-bottom:18px;}
+  .wa-copy p{color:#C3BCD6; font-size:16px; margin-bottom:26px; max-width:440px;}
+  .wa-feature{display:flex; gap:12px; margin-bottom:16px; align-items:flex-start;}
+  .wa-feature .fmark{font-family:'JetBrains Mono',monospace; color:var(--amber); font-size:13px; margin-top:2px;}
+  .wa-feature span{font-size:14.5px; color:#D6D0E6;}
+
+  .phone-shell{background:#1E1A38; border-radius:34px; padding:14px; width:340px; margin:0 auto; box-shadow:0 30px 70px rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.08);}
+  .phone-screen{background:#231F42; border-radius:22px; height:580px; display:flex; flex-direction:column; overflow:hidden;}
+  .wa-topbar{background:var(--violet); padding:16px 18px; display:flex; align-items:center; gap:10px; font-size:14px; font-weight:600;}
+  .wa-avatar{width:32px; height:32px; border-radius:50%; background:var(--amber); display:flex; align-items:center; justify-content:center; font-family:'Source Serif 4',serif; font-size:14px; color:white;}
+  .wa-status{font-size:11px; color:#E7DFF6; font-weight:400;}
+  .wa-body{flex:1; padding:16px; display:flex; flex-direction:column; gap:10px; overflow-y:auto; background-image: radial-gradient(rgba(255,255,255,0.02) 1px, transparent 1px); background-size:14px 14px;}
+  .bubble{max-width:82%; padding:10px 13px; border-radius:12px; font-size:13.5px; line-height:1.45; animation:rise .25s ease;}
+  @keyframes rise{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+  .bubble.bot{background:#332C5C; color:#EFEAF8; align-self:flex-start; border-bottom-left-radius:3px;}
+  .bubble.user{background:var(--amber); color:white; align-self:flex-end; border-bottom-right-radius:3px;}
+  .bubble.options{display:flex; flex-direction:column; gap:6px; align-self:flex-start; max-width:90%;}
+  .bubble.match-card{background:#332C5C; align-self:flex-start; max-width:92%; padding:12px;}
+  .match-name{font-weight:600; font-size:13.5px; margin-bottom:2px;}
+  .match-meta{font-size:11.5px; color:#B8AEDA; margin-bottom:6px;}
+  .opt-btn{background:transparent; border:1px solid #4A4270; color:#D6CEEE; padding:8px 12px; border-radius:8px; font-family:'Inter',sans-serif; font-size:13px; text-align:left; cursor:pointer; transition:background .15s;}
+  .opt-btn:hover{background:#332C5C;}
+  .opt-btn:disabled{opacity:0.4; cursor:default;}
+  .typing{align-self:flex-start; display:flex; gap:4px; padding:10px 13px;}
+  .typing span{width:6px; height:6px; border-radius:50%; background:#6D5FA0; animation:bounce 1s infinite;}
+  .typing span:nth-child(2){animation-delay:0.15s;} .typing span:nth-child(3){animation-delay:0.3s;}
+  @keyframes bounce{0%,60%,100%{transform:translateY(0);} 30%{transform:translateY(-4px);}}
+  .wa-input{padding:12px 14px; border-top:1px solid rgba(255,255,255,0.06); display:flex; gap:8px;}
+  .wa-input .fake-input{flex:1; background:#332C5C; border-radius:20px; padding:9px 14px; font-size:12.5px; color:#8A7FB8;}
+  .wa-restart{background:#332C5C; border-radius:20px; padding:9px 14px; font-size:12px; color:#D6CEEE; border:none; cursor:pointer; font-family:'JetBrains Mono',monospace;}
+
+  /* therapist / ogma section */
+  .ogma-grid{display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center;}
+  @media (max-width:900px){ .ogma-grid{grid-template-columns:1fr;} }
+  .admin-card{background:var(--white); border:1px solid var(--line); border-radius:8px; padding:30px 32px;}
+  .admin-row{display:flex; justify-content:space-between; align-items:center; padding:16px 0; border-bottom:1px solid var(--line);}
+  .admin-row:last-child{border-bottom:none;}
+  .admin-row .label{font-size:14px; color:var(--slate);}
+  .admin-row .value{font-family:'JetBrains Mono',monospace; font-size:14px; font-weight:600;}
+  .admin-row .value.before{color:var(--slate); text-decoration:line-through; opacity:0.6;}
+  .admin-row .value.after{color:var(--amber-deep);}
+
+  footer{background:var(--paper-2); padding:60px 0 32px; border-top:1px solid var(--line);}
+  .foot-grid{display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:40px; margin-bottom:40px;}
+  @media (max-width:700px){ .foot-grid{grid-template-columns:1fr;} }
+  .foot-brand{font-family:'Source Serif 4',serif; font-weight:600; font-size:18px; margin-bottom:10px;}
+  footer p{color:var(--slate); font-size:14px;}
+  footer h4{font-size:13px; text-transform:uppercase; letter-spacing:0.05em; color:var(--slate); margin-bottom:14px; font-family:'JetBrains Mono',monospace; font-weight:500;}
+  footer ul{list-style:none;}
+  footer li{margin-bottom:9px; font-size:14.5px;}
+  .foot-bottom{border-top:1px solid var(--line); padding-top:24px; display:flex; justify-content:space-between; font-size:12.5px; color:var(--slate); flex-wrap:wrap; gap:10px;}
+
+  .pitch-banner{background:var(--amber); color:white; text-align:center; padding:9px; font-size:12.5px; font-family:'JetBrains Mono',monospace;}
+</style>
+</head>
+<body>
+
+<div class="pitch-banner">DEMO CONCEPT — built by QivaLabs for Saltroad · not a live site</div>
+
+<nav>
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span> Saltroad</div>
+    <div class="navlinks">
+      <a href="#how">How it works</a>
+      <a href="#match">Find a therapist</a>
+      <a href="#therapists">For therapists</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <a class="navcta" href="#match">Get matched →</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">1,000+ HCPC-registered therapists · England-wide</div>
+    <h1 class="display">Every child deserves<br>to be heard <em>sooner.</em></h1>
+    <p class="lead">Saltroad matches your child with the right speech and language therapist — based on their needs, your budget, and your schedule. No waiting lists. No guesswork.</p>
+
+    <div class="wait-compare">
+      <div class="wait-row">
+        <div class="wait-label"><span class="name">Typical NHS / private waiting list</span><span class="val typical mono">6–12 months</span></div>
+        <div class="wait-track"><div class="wait-fill typical"></div></div>
+      </div>
+      <div class="wait-row">
+        <div class="wait-label"><span class="name">Matched through Saltroad</span><span class="val saltroad mono">2–3 days</span></div>
+        <div class="wait-track"><div class="wait-fill saltroad"></div></div>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <a href="#match" class="btn btn-primary">Message us on WhatsApp</a>
+      <a href="#therapists" class="btn btn-ghost">I'm a therapist</a>
+    </div>
+  </div>
+</section>
+
+<section class="trust-strip">
+  <div class="wrap trust-grid">
+    <div><div class="trust-num mono">1,000+</div><div class="trust-label">HCPC-registered therapists</div></div>
+    <div><div class="trust-num mono">~2M</div><div class="trust-label">UK children need SLT support</div></div>
+    <div><div class="trust-num mono">2–3 days</div><div class="trust-label">Typical time to first match</div></div>
+    <div><div class="trust-num mono">3</div><div class="trust-label">Therapist options, every time</div></div>
+  </div>
+</section>
+
+<section class="section" id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">How matching works</div>
+      <h2 class="display">Three questions stand between waiting and being seen</h2>
+      <p>Parents don't need to research therapists themselves — Saltroad does the matching, in the same conversation they'd have with a friend.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="snum mono">01 / TELL US</div>
+        <h3>About your child</h3>
+        <p>A few questions about their needs, age, and what's been happening — takes under two minutes.</p>
+      </div>
+      <div class="step">
+        <div class="snum mono">02 / GET MATCHED</div>
+        <h3>With three therapists</h3>
+        <p>Chosen for fit on specialism, budget, and availability — not just whoever has a free slot.</p>
+      </div>
+      <div class="step">
+        <div class="snum mono">03 / BOOK</div>
+        <h3>A free consultation</h3>
+        <p>Pick the therapist who feels right and book directly — no forms, no phone tag.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wa-section" id="match">
+  <div class="wrap wa-grid">
+    <div class="wa-copy">
+      <div class="kicker">Live demo</div>
+      <h2 class="display">This is the matching conversation parents actually have</h2>
+      <p>Tap through the chat on the right — it runs on WhatsApp, the same app parents already use daily, and folds Saltroad's matching logic into one short conversation.</p>
+      <div class="wa-feature"><span class="fmark">→</span><span>Matches on specialism, budget and schedule — not just "next available"</span></div>
+      <div class="wa-feature"><span class="fmark">→</span><span>Shows three real therapist profiles, not a single default option</span></div>
+      <div class="wa-feature"><span class="fmark">→</span><span>Books the consultation directly inside the chat</span></div>
+      <div class="wa-feature"><span class="fmark">→</span><span>Handles the Saltroad + Ogma brand as one seamless experience</span></div>
+    </div>
+
+    <div class="phone-shell">
+      <div class="phone-screen">
+        <div class="wa-topbar">
+          <div class="wa-avatar">S</div>
+          <div>Saltroad<br><span class="wa-status">● Usually replies in minutes</span></div>
+        </div>
+        <div class="wa-body" id="chatBody"></div>
+        <div class="wa-input">
+          <div class="fake-input">Tap an option above to continue…</div>
+          <button class="wa-restart" id="restartBtn">↺ Restart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="therapists">
+  <div class="wrap ogma-grid">
+    <div>
+      <div class="kicker">For therapists — powered by Ogma</div>
+      <h2 class="display" style="margin-bottom:16px;">Less admin. More time with the children who need you.</h2>
+      <p style="color:var(--slate); font-size:16px; margin-bottom:20px;">Every session's notes are drafted automatically — structured, standardised, and ready to review in minutes, not hours.</p>
+      <p style="color:var(--slate); font-size:15px;">This is the same clinical documentation engine Saltroad acquired with Ogma — shown here as part of one unified therapist experience, instead of a separate tool.</p>
+    </div>
+    <div class="admin-card">
+      <div class="admin-row"><span class="label">Notes per session</span><span class="value before mono">18–22 min</span></div>
+      <div class="admin-row"><span class="label">With Ogma AI drafting</span><span class="value after mono">3–4 min</span></div>
+      <div class="admin-row"><span class="label">Admin hours reclaimed / week</span><span class="value after mono">~6 hrs</span></div>
+      <div class="admin-row"><span class="label">Extra children seen / month</span><span class="value after mono">+4 to 6</span></div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand">Saltroad</div>
+        <p>Clinician-led speech &amp; language therapy, matched to your child — England-wide.</p>
+      </div>
+      <div>
+        <h4>Platform</h4>
+        <ul><li>Find a therapist</li><li>Message us on WhatsApp</li><li>Join as a therapist</li></ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul><li>About Saltroad</li><li>Ogma clinical AI</li><li>Careers</li></ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>Design &amp; WhatsApp matching concept by QivaLabs</span>
+      <span>Demo build — not affiliated with or endorsed by Saltroad</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const chatBody = document.getElementById('chatBody');
+const restartBtn = document.getElementById('restartBtn');
+
+function addBubble(text, cls){
+  const b = document.createElement('div');
+  b.className = 'bubble ' + cls;
+  b.textContent = text;
+  chatBody.appendChild(b);
+  chatBody.scrollTop = chatBody.scrollHeight;
+  return b;
+}
+function addMatchCard(name, meta){
+  const wrap = document.createElement('div');
+  wrap.className = 'bubble match-card';
+  wrap.innerHTML = `<div class="match-name">${name}</div><div class="match-meta">${meta}</div>`;
+  chatBody.appendChild(wrap);
+  chatBody.scrollTop = chatBody.scrollHeight;
+}
+function addTyping(cb){
+  const t = document.createElement('div');
+  t.className = 'typing';
+  t.innerHTML = '<span></span><span></span><span></span>';
+  chatBody.appendChild(t);
+  chatBody.scrollTop = chatBody.scrollHeight;
+  setTimeout(()=>{ t.remove(); cb(); }, 700 + Math.random()*400);
+}
+function addOptions(opts){
+  const wrap = document.createElement('div');
+  wrap.className = 'bubble options';
+  opts.forEach(o=>{
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.textContent = o.label;
+    btn.onclick = () => {
+      Array.from(wrap.children).forEach(c=>c.disabled=true);
+      addBubble(o.label, 'user');
+      addTyping(o.next);
+    };
+    wrap.appendChild(btn);
+  });
+  chatBody.appendChild(wrap);
+  chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+function startFlow(){
+  chatBody.innerHTML = '';
+  addTyping(() => {
+    addBubble("Hi, this is Saltroad 👋 Let's find the right therapist for your child. How old are they?", 'bot');
+    addOptions([
+      {label:'2–5 years old', next: askConcern},
+      {label:'6–11 years old', next: askConcern},
+      {label:'12+ years old', next: askConcern},
+    ]);
+  });
+}
+
+function askConcern(){
+  addBubble("Thanks. What's your main concern right now?", 'bot');
+  addOptions([
+    {label:'Speech sounds / clarity', next: () => askBudget('speech sounds')},
+    {label:'Language delay', next: () => askBudget('language delay')},
+    {label:'Stammering', next: () => askBudget('stammering')},
+  ]);
+}
+
+function askBudget(concern){
+  addBubble("Got it. What's your budget per session?", 'bot');
+  addOptions([
+    {label:'£40–£60', next: () => showMatches(concern)},
+    {label:'£60–£90', next: () => showMatches(concern)},
+    {label:"Not sure yet", next: () => showMatches(concern)},
+  ]);
+}
+
+function showMatches(concern){
+  addBubble("Finding your best matches…", 'bot');
+  addTyping(() => {
+    addBubble(`Here are 3 HCPC-registered therapists who specialise in ${concern}:`, 'bot');
+    addMatchCard('Priya Nair', 'Paediatric SLT · 8 yrs exp · £55/session · Next slot: Thu 4pm');
+    addMatchCard('Tom Whitfield', 'Paediatric SLT · 5 yrs exp · £48/session · Next slot: Fri 10am');
+    addMatchCard('Aisha Rahman', 'Paediatric SLT · 11 yrs exp · £62/session · Next slot: Wed 2pm');
+    addTyping(() => {
+      addBubble("Want me to book a free 15-minute consultation with any of them?", 'bot');
+      addOptions([
+        {label:'Book with Priya', next: () => confirmBooking('Priya Nair', 'Thu 4pm')},
+        {label:'Book with Tom', next: () => confirmBooking('Tom Whitfield', 'Fri 10am')},
+        {label:'Book with Aisha', next: () => confirmBooking('Aisha Rahman', 'Wed 2pm')},
+      ]);
+    });
+  });
+}
+
+function confirmBooking(name, slot){
+  addTyping(() => {
+    addBubble(`Booked ✅ Your free consultation with ${name} is set for ${slot}. We'll send a reminder the day before. Talk soon!`, 'bot');
+  });
+}
+
+restartBtn.onclick = startFlow;
+startFlow();
+</script>
+
+</body>
+</html>
